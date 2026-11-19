@@ -224,4 +224,4 @@ app.patch("/api/peminjaman/:id",async(req,res) => {
             message:"Data gagal diupdate."
         });
     }
-}); 
+});
