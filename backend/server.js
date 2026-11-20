@@ -14,8 +14,20 @@ app.listen(PORT,() => {
 // READ
 app.get("/api/alat", async (req,res) => {
     try{
-        const query = await pool.query("SELECT * FROM alat");
-        res.json(query.rows)
+        const query = `
+        SELECT 
+        id_alat,
+        nama_kategori,
+        nama_alat,
+        kondisi,
+        stok,
+        lokasi
+        FROM alat
+        LEFT JOIN kategori_alat ON alat.id_kategori = kategori_alat.id_kategori
+        ORDER BY id_alat ASC
+        `;
+        const result = await pool.query(query);
+        res.json(result.rows)
     }catch(err){
         console.error(err.message);
         res.status(500).json({ error:"Terjadi kesalahan."});
@@ -54,7 +66,7 @@ app.post("/api/alat",async (req,res) => {
             stok,
             lokasi
         ]);
-        res.status(201).josn(res.json(result.rows[0]));
+        res.status(201).json(result.rows[0]);
     }catch (err){
         console.error(err.message);
         res.status(500).json({ error: "Alat gagal ditambahkan."})
@@ -65,7 +77,7 @@ app.post("/api/kategori",async (req,res) => {
         const {nama_kategori,deskripsi} = req.body;
         const query = `INSERT INTO kategori_alat (nama_kategori,deskripsi) VALUES ($1,$2)`
         const result = await pool.query(query,[nama_kategori,deskripsi]);
-        res.status(201).josn(res.json(result.rows[0]));
+        res.status(201).json(result.rows[0])
     }catch (err){
         console.error(err.message);
         res.status(500).json({ error: "kategori alat gagal ditambahkan."})
@@ -84,7 +96,7 @@ app.post("/api/peminjaman",async (req,res) => {
             jumlah,
             status
         ]);
-        res.status(201).josn(res.json(result.rows[0]));
+        res.status(201).json(result.rows[0])
     }catch (err){
         console.error(err.message);
         res.status(500).json({ error: "peminjaman gagal ditambahkan."})
@@ -97,7 +109,7 @@ app.delete("/api/alat/:id",async(req,res) => {
         const { id } = req.params;
         const query = `DELETE FROM alat WHERE id_alat = $1 RETURNING *`
         const result = await pool.query(query,[id]);
-        res.status(201).json(result.rows[0]);
+        res.status(200).json(result.rows[0]);
     } catch (err) {
         console.error(err.message)
         res.status(500).json({error:"alat gagal di hapus."})
@@ -108,7 +120,7 @@ app.delete("/api/kategori/:id",async(req,res) => {
         const { id } = req.params;
         const query = `DELETE FROM kategori_alat WHERE id_kategori = $1 RETURNING *`
         const result = await pool.query(query,[id]);
-        res.status(201).json(result.rows[0]);
+        res.status(200).json(result.rows[0]);
     } catch (err) {
         console.error(err.message)
         res.status(500).json({error:"kategori lama gagal di hapus."})
@@ -119,7 +131,7 @@ app.delete("/api/peminjaman/:id",async(req,res) => {
         const { id } = req.params;
         const query = `DELETE FROM peminjaman WHERE id_peminjaman = $1 RETURNING *`
         const result = await pool.query(query,[id]);
-        res.status(201).json(result.rows[0]);
+        res.status(200).json(result.rows[0]);
     } catch (err) {
         console.error(err.message)
         res.status(500).json({error:"peminjaman gagal di hapus dari daftar."})
