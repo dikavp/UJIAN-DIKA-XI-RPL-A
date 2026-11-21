@@ -13,22 +13,31 @@ function renderPeminjaman(data){
     const table = document.getElementById("tbody-peminjaman")
     data.forEach((e) => {
         table.innerHTML += `
-        <tr>
+        <tr class="border-b hover:bg-gray-50">
             <td class="py-2 px-3 text-center w-12">${e.id_peminjaman}</td>
             <td class="py-2 px-3 text-center">${e.id_alat}</td>
             <td class="py-2 px-3 text-sm">${e.nama_peminjam}</td>
             <td class="py-2 px-3 text-center w-16">${e.kelas}</td>
-            <td class="py-2 px-3">${e.tanggal_pinjam}</td>
-            <td class="py-2 px-3">${e.tanggal_kembali}</td>
+            <td class="py-2 px-3 text-center whitespace-nowrap">${new Date(e.tanggal_pinjam).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</td>
+            <td class="py-2 px-3 text-center whitespace-nowrap">${new Date(e.tanggal_kembali).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</td>
             <td class="py-2 px-3 text-center w-16">${e.jumlah}</td>
             <td class="py-2 px-3 text-center w-32">${e.status}</td>
             <td class="py-2 px-3">
-                <div class="py-2 px-3 flex gap-4 flex-row w-40">
-                    <button onclick="editPinjaman(${e.id_peminjaman});" class="p-2 rounded-lg  hover:bg-amber-500 transition-colors duration-100 cursor-pointer bg-amber-400">Edit</button>
-                    <button onclick="deletePinjaman(${e.id_peminjaman});" class="p-2 rounded-lg hover:bg-red-500 transition-colors duration-100 cursor-pointer bg-red-400 ">Delete</button>
+                <div class="flex items-center justify-center gap-2">
+                <button 
+                    onclick="editPinjaman(${e.id_peminjaman});" 
+                    class="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-900 text-sm font-medium transition-colors duration-100 cursor-pointer">
+                    Edit
+                </button>
+                <button 
+                    onclick="deletePinjaman(${e.id_peminjaman});" 
+                    class="px-3 py-1.5 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-colors duration-100 cursor-pointer">
+                    Delete
+                </button>
                 </div>
             </td>
-        </tr>   
+        </tr>
+  
         `;
     });
 }
